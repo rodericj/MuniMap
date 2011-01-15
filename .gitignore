@@ -1,0 +1,19 @@
+tmp/
+
+*.pyc
+*.swp
+iPhoneSDKCertificates/*
+
+*moved-aside*
+
+#xcode noise
+*.pbxuser
+*.xcodeproj/*.pbxuser
+build
+*.mode1v3
+
+# osx noise
+.DS_Store
+
+
+
