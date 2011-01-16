@@ -19,38 +19,24 @@
 
 #pragma mark -
 #pragma mark View lifecycle
-
-/*
-- (void)viewDidLoad {
-    [super viewDidLoad];
-
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-*/
-
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	
-	//Do we know what the stop number or stop id is?
-	NSLog(@"stop id is %d", self.stopId);
-
 	//start the network request
 	NSString *url = [NSString stringWithFormat:@"%@%d", muniStopPredictionUrl, self.stopId];
 	NSURLRequest *theRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:url]
 											  cachePolicy:NSURLRequestUseProtocolCachePolicy
 										  timeoutInterval:60.0];
+	
 	// create the connection with the request
 	// and start loading the data
-	NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
-	if (theConnection) {
+	NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+	if (conn) {
 		// Create the NSMutableData to hold the received data.
 		// receivedData is an instance variable declared elsewhere.
 		self.incomingData = [[NSMutableData alloc] init];
-	} else {
+	} else
 		NSLog(@"the connection failed");
-	}
 	
 }
 
@@ -62,14 +48,17 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-	[self.incomingData release];
+	
     // release the connection, and the data object
     [connection release];
+	[self.incomingData release];
+
     // receivedData is declared as a method instance elsewhere	
     // inform the user
     NSLog(@"Connection failed! Error - %@ %@",
           [error localizedDescription],
           [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
+	
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
@@ -84,78 +73,74 @@
     // release the connection, and the data object
 	[self.incomingData release];
     [connection release];
+	
 }
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName attributes:(NSDictionary *)attributeDict
 {
-	
-	//NSLog(@"start element name %@, namespace %@ qualified %@, attributes %@", elementName, namespaceURI, qualifiedName, attributeDict);
 
+	//predictions (with an 's') come first in the XML, use the prediction element to describe the route title
+	//  ex: 1-california. 
+	//Use this as the beginning of our dictionary key
 	if ([elementName isEqualToString:@"predictions"]) {
-		//NSLog(@"predictions start element name %@, attributes %@", elementName, attributeDict);
-		NSLog(@"i see the %@", [attributeDict objectForKey:@"routeTitle"]);
-		if (!self.lookup) {
-			self.lookup = [[NSMutableDictionary alloc] init];
+		if (!self.lookup)
+			self.lookup = [[NSMutableDictionary alloc] init];	
+		if ([attributeDict objectForKey:@"dirTitleBecauseNoPredictions"]) {
+			NSString *routeName = [NSString stringWithFormat:@"%@ %@", 
+								   [attributeDict objectForKey:@"routeTitle"],
+								   [attributeDict objectForKey:@"dirTitleBecauseNoPredictions"]];
+			self.currentLookup = routeName;
+			[self.lookup setObject:[[NSMutableArray alloc] init] forKey:self.currentLookup];
 		}
-		[self.lookup setObject:[[NSMutableArray alloc] init] forKey:[attributeDict objectForKey:@"routeTitle"]];
-		self.currentLookup = [attributeDict objectForKey:@"routeTitle"];
+		else 
+			self.currentLookup = [attributeDict objectForKey:@"routeTitle"];
 	}
-	if ([elementName isEqualToString:@"prediction"]) {
-//		NSLog(@"prediction start element name %@, attributes %@", elementName, attributeDict);
-		NSLog(@"it gets here at %@, add it to %@", [attributeDict objectForKey:@"minutes"], self.currentLookup);
-		[(NSMutableArray *)[self.lookup objectForKey:self.currentLookup] addObject:[attributeDict objectForKey:@"minutes"]];
+	
+	//direction comes next. This, obviously, describes the direction of the route.
+	//  ex: Outbound to Geary & 33rd Ave
+	//Add this to the end of the string we started above, and create an empty array to store the predictions
+	if ([elementName isEqualToString:@"direction"]) {
+		self.currentLookup = [NSString stringWithFormat:@"%@ %@", self.currentLookup, [attributeDict 
+																					   objectForKey:@"title"]];
+		[self.lookup setObject:[[NSMutableArray alloc] init] forKey:self.currentLookup];
 	}
-	NSLog(@"self.lookup %@", self.lookup);
+	
+	//Finally one or more prediction objects show up in the XML
+	if ([elementName isEqualToString:@"prediction"])
+		[(NSMutableArray *)[self.lookup objectForKey:self.currentLookup] addObject:[attributeDict 
+																					objectForKey:@"minutes"]];
+	
 }	
+
 - (void)parserDidEndDocument:(NSXMLParser *)parser
 {
+	[parser release];
+	//now that we've got all of the data in our internal data structure, let's reload
 	[self.tableView reloadData];
 }
-
-/*
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-*/
-/*
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-}
-*/
-/*
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-}
-*/
-/*
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations.
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-*/
-
 
 #pragma mark -
 #pragma mark Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    // Return the number of sections.
-	NSLog(@"%d rows ", [self.lookup count]);
-	
+	//simply the number of bus lines we found at this stop
     return [self.lookup count];
 }
 
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	return [[self.lookup allKeys] objectAtIndex:section];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // Return the number of rows in the section.
+    
+	// Return the number of rows in the section.
 	NSString *key = [[self.lookup allKeys] objectAtIndex:section];
-	return [[self.lookup objectForKey:key] count];
+	
+	if ([[self.lookup objectForKey:key] count])
+		return [[self.lookup objectForKey:key] count];
+	
+	return 1;
 }
 
 
@@ -167,55 +152,22 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
     // Configure the cell...
 	NSString *key = [[self.lookup allKeys] objectAtIndex:indexPath.section];
-
-	[cell setText:[[self.lookup objectForKey:key] objectAtIndex:indexPath.row]];
+	//NSString *key = [[self.lookup allKeys] objectAtIndex:section];
+	if ([[self.lookup objectForKey:key] count])
+	{
+		NSString *text = [NSString stringWithFormat:@"%@ minutes", [[self.lookup objectForKey:key] objectAtIndex:indexPath.row]];
+		cell.textLabel.text = text;
+	}
+	else
+		cell.textLabel.text = @"No predictions at this time.";
+	
     return cell;
 }
-
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source.
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-    }   
-}
-*/
-
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
 
 #pragma mark -
 #pragma mark Table view delegate
@@ -250,6 +202,16 @@
 
 - (void)dealloc {
     [super dealloc];
+
+	//release all of the NSMutableArray of predictions that I created in the lookup dictionary
+	for (NSString *k in self.lookup)
+		[[self.lookup objectForKey:k] release];
+	
+	self.lookup = nil;
+	self.currentLookup = nil;
+
+	//Yes this should be relased, just double checking
+	self.incomingData = nil;
 }
 
 
