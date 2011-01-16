@@ -38,6 +38,9 @@
 	// and start loading the data
 	NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
 	if (theConnection) {
+		[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] setActiveConnections:[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] activeConnections]+1];
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
 		// Create the NSMutableData to hold the received data.
 		// receivedData is an instance variable declared elsewhere.
 		NSMutableData *dataObject = [[NSMutableData alloc] init];
@@ -57,6 +60,10 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
+	[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] setActiveConnections:[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] activeConnections]-1];
+	if(![(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] activeConnections])
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+
     // release the connection, and the data object
     [connection release];
     // receivedData is declared as a method instance elsewhere
@@ -70,6 +77,10 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+	[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] setActiveConnections:[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] activeConnections]-1];
+	if(![(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] activeConnections])
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+
 	//load the data into the parser and lets get stuff out.
 	NSXMLParser *parser = [[NSXMLParser alloc] initWithData:[self.rawDataDictionary objectForKey:[connection description]]];
     [parser setDelegate:self];
@@ -94,6 +105,11 @@
 		// and start loading the data
 		NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
 		if (theConnection) {
+			[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] setActiveConnections:[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] activeConnections]+1];
+			[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+			
+			
+			
 			// Create the NSMutableData to hold the received data.
 			// receivedData is an instance variable declared elsewhere.
 			NSMutableData *dataObject = [[NSMutableData alloc] init];

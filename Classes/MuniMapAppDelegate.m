@@ -13,7 +13,7 @@
 
 @synthesize window;
 @synthesize viewController;
-
+@synthesize activeConnections = mActiveConnetions;
 
 #pragma mark -
 #pragma mark Application lifecycle

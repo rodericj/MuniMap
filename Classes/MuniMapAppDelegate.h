@@ -14,10 +14,12 @@
 @interface MuniMapAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
     MuniMapViewController *viewController;
+	int mActiveConnections;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet MuniMapViewController *viewController;
+@property (nonatomic, assign) int activeConnections;
 
 
 @end

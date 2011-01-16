@@ -105,7 +105,7 @@
 		// if an existing pin view was not available, create one
 		pinView = [[[MKPinAnnotationView alloc]
 											   initWithAnnotation:annotation reuseIdentifier:stopannotationidentifier] autorelease];
-		pinView.pinColor = MKPinAnnotationColorPurple;
+		pinView.pinColor = MKPinAnnotationColorGreen;
 		pinView.animatesDrop = YES;
 		pinView.canShowCallout = YES;
 		
@@ -136,11 +136,10 @@
 	[self.navigationController setNavigationBarHidden:YES animated:YES];
 
 }
--(void)showDetails:(UIButton *)something
+-(void)showDetails:(UIButton *)pushedButton
 {
-	NSLog(@"id something %@ %d", something, something.tag);
 	StopDetailViewController *stopDetailView = [[StopDetailViewController alloc] initWithNibName:@"StopDetailViewController" bundle:nil];
-	[stopDetailView setStopId:something.tag];
+	[stopDetailView setStopId:pushedButton.tag];
 	[self.navigationController pushViewController:stopDetailView animated:YES];
 	[self.navigationController setNavigationBarHidden:NO animated:YES];
 	[stopDetailView release];

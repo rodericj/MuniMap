@@ -7,7 +7,7 @@
 //
 
 #import "StopDetailViewController.h"
-
+#import "MuniMapAppDelegate.h"
 #define muniStopPredictionUrl @"http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=sf-muni&stopId="
 
 @implementation StopDetailViewController
@@ -35,6 +35,9 @@
 		// Create the NSMutableData to hold the received data.
 		// receivedData is an instance variable declared elsewhere.
 		self.incomingData = [[NSMutableData alloc] init];
+		[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] setActiveConnections:[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] activeConnections]+1];
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
 	} else
 		NSLog(@"the connection failed");
 	
@@ -48,7 +51,10 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-	
+	[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] setActiveConnections:[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] activeConnections]-1];
+	if(![(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] activeConnections])
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+
     // release the connection, and the data object
     [connection release];
 	[self.incomingData release];
@@ -63,6 +69,9 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+	[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] setActiveConnections:[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] activeConnections]-1];
+	if(![(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] activeConnections])
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 
 	//load the data into the parser and lets get stuff out.
 	NSXMLParser *parser = [[NSXMLParser alloc] initWithData:self.incomingData];
