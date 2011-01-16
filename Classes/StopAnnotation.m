@@ -12,7 +12,7 @@
 @implementation StopAnnotation
 @synthesize coordinate;
 @synthesize title;
-
+@synthesize stopId; 
 -(id)initWithCoordinate:(CLLocationCoordinate2D) c{
 	coordinate=c;
 	return self;

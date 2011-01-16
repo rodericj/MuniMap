@@ -22,8 +22,10 @@
     
     // Override point for customization after application launch.
 
+	UINavigationController *a = [[UINavigationController alloc] initWithRootViewController:viewController];
+	[a setNavigationBarHidden:YES];
     // Add the view controller's view to the window and display.
-    [self.window addSubview:viewController.view];
+    [self.window addSubview:a.view];
     [self.window makeKeyAndVisible];
 
     return YES;

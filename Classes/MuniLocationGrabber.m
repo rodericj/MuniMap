@@ -81,12 +81,8 @@
 	[[self.rawDataDictionary objectForKey:[connection description]] release];
 }
 
-- (void)parserDidStartDocument:(NSXMLParser *)parser
-{
-}
 -(void)addNewRouteToDataStructure:(NSString *)routeTag{
 	
-		NSLog(@"go hit the network to find the route details for %@", routeTag);
 		// Create the request.
 		NSString *urlString = [NSString stringWithFormat:@"%@%@", routeDetailURL, routeTag];
 		NSURL *url = [[NSURL alloc] initWithString:urlString];
@@ -145,7 +141,6 @@
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser
 {
-	NSLog(@"end parsing %@", self.currentTag);
 	self.currentTag = nil;
 	[parser release];
 	

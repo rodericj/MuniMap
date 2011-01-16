@@ -12,9 +12,10 @@
 @interface StopAnnotation : NSObject <MKAnnotation>{
 	CLLocationCoordinate2D coordinate;
 	NSString *title;
+	int stopId;
 }
 
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
 @property (nonatomic, retain) NSString *title;
-
+@property (nonatomic, assign) int stopId;
 @end

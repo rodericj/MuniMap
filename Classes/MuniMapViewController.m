@@ -9,6 +9,7 @@
 #import "MuniMapViewController.h"
 #import "MuniLocationGrabber.h"
 #import "StopAnnotation.h"
+#import "StopDetailViewController.h"
 
 #define montgomeryBartLatitude 37.787717
 #define montgomeryBartLongitude -122.402458
@@ -83,6 +84,7 @@
 {
 	StopAnnotation *a = [[StopAnnotation alloc] initWithCoordinate:center];
 	[a setTitle:tag];	
+	[a setStopId:[stopId intValue]];
 	
 	[self.mapView addAnnotation:a];
 }
@@ -92,12 +94,56 @@
 	NSLog(@"region changed %f, %f", [mapView centerCoordinate].latitude, [mapView centerCoordinate].longitude);
 }
 
+-(MKAnnotationView *)buildPinWithAnnotation:(id <MKAnnotation>)annotation
+{
+	// try to dequeue an existing pin view first
+	static NSString* stopannotationidentifier = @"stopAnnotationId";
+	MKPinAnnotationView* pinView = (MKPinAnnotationView *)
+	[self.mapView dequeueReusableAnnotationViewWithIdentifier:stopannotationidentifier];
+	if (!pinView)
+	{
+		// if an existing pin view was not available, create one
+		pinView = [[[MKPinAnnotationView alloc]
+											   initWithAnnotation:annotation reuseIdentifier:stopannotationidentifier] autorelease];
+		pinView.pinColor = MKPinAnnotationColorPurple;
+		pinView.animatesDrop = YES;
+		pinView.canShowCallout = YES;
+		
+		// add a detail disclosure button to the callout which will open a new view controller page
+		//
+		// note: you can assign a specific call out accessory view, or as MKMapViewDelegate you can implement:
+		//  - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control;
+		//
+		UIButton* rightButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+		[rightButton addTarget:self
+						action:@selector(showDetails:)
+			  forControlEvents:UIControlEventTouchUpInside];
+		rightButton.tag = [(StopAnnotation*) annotation stopId];
+		pinView.rightCalloutAccessoryView = rightButton;
+		
+	}
+	return pinView;
+}
 - (MKAnnotationView *)mapView:(MKMapView *)theMapView viewForAnnotation:(id <MKAnnotation>)annotation
 {
-	// if it's the user location, just return nil.
-	if ([annotation isKindOfClass:[MKUserLocation class]])
-		NSLog(@"this is the user location");
-	return nil;
+    // if it's the user location, just return nil.
+    if ([annotation isKindOfClass:[MKUserLocation class]])
+        return nil;
+	return [self buildPinWithAnnotation:annotation];
+}
+-(void)viewWillAppear:(BOOL)animated
+{
+	[self.navigationController setNavigationBarHidden:YES animated:YES];
+
+}
+-(void)showDetails:(UIButton *)something
+{
+	NSLog(@"id something %@ %d", something, something.tag);
+	StopDetailViewController *stopDetailView = [[StopDetailViewController alloc] initWithNibName:@"StopDetailViewController" bundle:nil];
+	[stopDetailView setStopId:something.tag];
+	[self.navigationController pushViewController:stopDetailView animated:YES];
+	[self.navigationController setNavigationBarHidden:NO animated:YES];
+	[stopDetailView release];
 }
 
 - (void)dealloc

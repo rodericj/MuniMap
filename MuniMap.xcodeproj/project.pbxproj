@@ -16,6 +16,8 @@
 		174D729C12DEE44100EEF211 /* Stop.m in Sources */ = {isa = PBXBuildFile; fileRef = 174D729A12DEE44100EEF211 /* Stop.m */; };
 		174D72A012DEE45700EEF211 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 174D729F12DEE45700EEF211 /* CoreData.framework */; };
 		174D73E912E19EF100EEF211 /* StopAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 174D73E812E19EF100EEF211 /* StopAnnotation.m */; };
+		176AA15912E2F9EA00CC595C /* StopDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 176AA15712E2F9EA00CC595C /* StopDetailViewController.m */; };
+		176AA15A12E2F9EA00CC595C /* StopDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 176AA15812E2F9EA00CC595C /* StopDetailViewController.xib */; };
 		1D3623260D0F684500981E51 /* MuniMapAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* MuniMapAppDelegate.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -41,6 +43,9 @@
 		174D729F12DEE45700EEF211 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		174D73E712E19EF100EEF211 /* StopAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StopAnnotation.h; sourceTree = "<group>"; };
 		174D73E812E19EF100EEF211 /* StopAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StopAnnotation.m; sourceTree = "<group>"; };
+		176AA15612E2F9EA00CC595C /* StopDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StopDetailViewController.h; sourceTree = "<group>"; };
+		176AA15712E2F9EA00CC595C /* StopDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StopDetailViewController.m; sourceTree = "<group>"; };
+		176AA15812E2F9EA00CC595C /* StopDetailViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StopDetailViewController.xib; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* MuniMapAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MuniMapAppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* MuniMapAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MuniMapAppDelegate.m; sourceTree = "<group>"; };
@@ -76,6 +81,9 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				176AA15612E2F9EA00CC595C /* StopDetailViewController.h */,
+				176AA15712E2F9EA00CC595C /* StopDetailViewController.m */,
+				176AA15812E2F9EA00CC595C /* StopDetailViewController.xib */,
 				1D3623240D0F684500981E51 /* MuniMapAppDelegate.h */,
 				1D3623250D0F684500981E51 /* MuniMapAppDelegate.m */,
 				28D7ACF60DDB3853001CB0EB /* MuniMapViewController.h */,
@@ -206,6 +214,7 @@
 			files = (
 				28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */,
 				2899E5220DE3E06400AC0155 /* MuniMapViewController.xib in Resources */,
+				176AA15A12E2F9EA00CC595C /* StopDetailViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -225,6 +234,7 @@
 				174D729B12DEE44100EEF211 /* Route.m in Sources */,
 				174D729C12DEE44100EEF211 /* Stop.m in Sources */,
 				174D73E912E19EF100EEF211 /* StopAnnotation.m in Sources */,
+				176AA15912E2F9EA00CC595C /* StopDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
