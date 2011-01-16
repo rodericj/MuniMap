@@ -20,7 +20,7 @@
 @synthesize currentTag = mCurrentTag;
 @synthesize delegate = mDelegate;
 
--(void)beginLoadingMuniDataWithDelegate:(NSObject *)delegate
+-(void)beginLoadingMuniDataWithDelegate:(MuniMapViewController *)delegate
 {
 	NSLog(@"start loading data");
 	if (!self.rawDataDictionary) {
