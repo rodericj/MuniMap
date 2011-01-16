@@ -29,6 +29,11 @@
     return YES;
 }
 
+- (void)applicationDidBecomeActive:(UIApplication *)application{
+	NSLog(@"alright, need to restart whatever launching did");
+	[viewController getLocation];
+}
+
 #pragma mark -
 #pragma mark Memory management
 

@@ -18,30 +18,35 @@
 @synthesize locationController = mLocationController;
 @synthesize mapView = mMapView;
 
-
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
 	// Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
 	
 	// Release any cached data, images, etc that aren't in use.
 }
 
-- (void)viewDidLoad {
+//Getting the user's location is required when we move geographical location
+-(void)getLocation
+{
 	self.locationController = [[MyCLController alloc] init];
 	self.locationController.delegate = self;
 	self.locationController.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
 	[self.locationController.locationManager startUpdatingLocation];
-	
+}
+
+- (void)viewDidLoad
+{
 	[self.view addSubview:self.mapView];
 	[self.mapView setShowsUserLocation:YES];
-	
-	MuniLocationGrabber *grabber = [[MuniLocationGrabber alloc] init];
-	[grabber beginLoadingMuniDataWithDelegate:self];
-	[grabber release];
 	
 	CLLocationCoordinate2D center;
 	center.latitude = montgomeryBartLatitude;
 	center.longitude = montgomeryBartLongitude;
+	
+	MuniLocationGrabber *grabber = [[MuniLocationGrabber alloc] init];
+	[grabber beginLoadingMuniDataWithDelegate:self];
+	[grabber release];
 	
 	MKCoordinateRegion m;
 	m.span.latitudeDelta = .005;
@@ -49,8 +54,8 @@
 	m.center = center;
 	//Set up the span
 	[self.mapView setRegion:m animated:YES];
-	
-	
+
+	[self getLocation];
 }
 
 - (void)locationUpdate:(CLLocation *)location
@@ -74,7 +79,8 @@
 	NSLog(@"Error getting location %@", error);
 }
 	
--(void)pointLoaded:(CLLocationCoordinate2D)center forLine:(NSString *)tag withStopId:(NSString *)stopId{
+-(void)pointLoaded:(CLLocationCoordinate2D)center forLine:(NSString *)tag withStopId:(NSString *)stopId
+{
 	StopAnnotation *a = [[StopAnnotation alloc] initWithCoordinate:center];
 	[a setTitle:tag];	
 	
@@ -86,15 +92,16 @@
 	NSLog(@"region changed %f, %f", [mapView centerCoordinate].latitude, [mapView centerCoordinate].longitude);
 }
 
-- (MKAnnotationView *)mapView:(MKMapView *)theMapView viewForAnnotation:(id <MKAnnotation>)annotation{
-	
+- (MKAnnotationView *)mapView:(MKMapView *)theMapView viewForAnnotation:(id <MKAnnotation>)annotation
+{
 	// if it's the user location, just return nil.
 	if ([annotation isKindOfClass:[MKUserLocation class]])
 		NSLog(@"this is the user location");
 	return nil;
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
     [super dealloc];
 	self.locationController = nil;
 	self.mapView = nil;
