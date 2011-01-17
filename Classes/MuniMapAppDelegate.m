@@ -8,7 +8,6 @@
 
 #import "MuniMapAppDelegate.h"
 #import "MuniMapViewController.h"
-
 @implementation MuniMapAppDelegate
 
 @synthesize window;
@@ -27,6 +26,7 @@
     // Add the view controller's view to the window and display.
     [self.window addSubview:a.view];
     [self.window makeKeyAndVisible];
+
 
     return YES;
 }

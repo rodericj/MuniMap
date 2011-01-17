@@ -35,7 +35,7 @@
 }
 
 - (void)dealloc {
-	[self.locationManager release];
+	self.locationManager = nil;
     [super dealloc];
 }
 

@@ -57,7 +57,7 @@
 
     // release the connection, and the data object
     [connection release];
-	[self.incomingData release];
+	//self.incomingData = nil;
 
     // receivedData is declared as a method instance elsewhere	
     // inform the user
@@ -80,7 +80,7 @@
     [parser parse];
 	
     // release the connection, and the data object
-	[self.incomingData release];
+	//self.incomingData = nil;
     [connection release];
 	
 }

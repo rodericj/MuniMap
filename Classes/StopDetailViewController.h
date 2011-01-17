@@ -17,7 +17,7 @@
 }
 
 @property (nonatomic, assign) int stopId;
-@property (nonatomic, assign) NSMutableData *incomingData;
-@property (nonatomic, assign) NSMutableDictionary *lookup;
-@property (nonatomic, assign) NSString *currentLookup;
+@property (nonatomic, retain) NSMutableData *incomingData;
+@property (nonatomic, retain) NSMutableDictionary *lookup;
+@property (nonatomic, retain) NSString *currentLookup;
 @end

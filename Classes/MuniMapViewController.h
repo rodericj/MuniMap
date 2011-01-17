@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "MyCLController.h"
 #import <MapKit/MapKit.h>
+#import <iAd/iAd.h>
 
-@interface MuniMapViewController : UIViewController <MyCLControllerDelegate, MKMapViewDelegate>{
+@interface MuniMapViewController : UIViewController <MyCLControllerDelegate, MKMapViewDelegate, ADBannerViewDelegate>{
 	MyCLController *mLocationController;
 	MKMapView *mMapView;
 }

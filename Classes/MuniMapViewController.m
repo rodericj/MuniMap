@@ -57,6 +57,13 @@
 	[self.mapView setRegion:m animated:YES];
 
 	[self getLocation];
+	
+	
+	ADBannerView *adView = [[ADBannerView alloc] initWithFrame:CGRectZero];
+	adView.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
+	adView.delegate = self;
+	[self.mapView addSubview:adView];
+	
 }
 
 - (void)locationUpdate:(CLLocation *)location
@@ -85,6 +92,8 @@
 	StopAnnotation *a = [[StopAnnotation alloc] initWithCoordinate:center];
 	[a setTitle:tag];	
 	[a setStopId:[stopId intValue]];
+	
+	//control which items are pushed to the map
 	
 	[self.mapView addAnnotation:a];
 }
@@ -143,6 +152,22 @@
 	[self.navigationController pushViewController:stopDetailView animated:YES];
 	[self.navigationController setNavigationBarHidden:NO animated:YES];
 	[stopDetailView release];
+}
+
+- (void)bannerContainerDidLoadAd:(NSObject *)bannerContainer {
+	NSLog(@"did load ad");
+}
+
+- (void)bannerContainerActionDidFinish:(NSObject *)bannerContainer {
+	NSLog(@"add action did finish");
+}
+
+- (void)bannerContainer:(NSObject *)bannerContainer didFailToReceiveAdWithError:(NSError *)error {
+	NSLog(@"did fail with error %@", error);
+}
+
+- (BOOL)bannerContainerActionShouldBegin:(NSObject *)bannerContainer willLeaveApplication:(BOOL)willLeave {
+	return YES;
 }
 
 - (void)dealloc
