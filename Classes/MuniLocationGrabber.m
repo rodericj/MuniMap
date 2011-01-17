@@ -134,12 +134,15 @@
 	else if ([elementName isEqualToString:@"body"]) {
 		//NSLog(@"do nothing with body");
 	}
-	else if ([elementName isEqualToString:@"stop"]){
+	
+	//if it is a 'stop' and it contains a 'lat' (bad data otherwise)
+	else if ([elementName isEqualToString:@"stop"] && [attributeDict objectForKey:@"lat"]){
 		[[self.routes objectForKey:self.currentTag] addObject:attributeDict];
 		
 		CLLocationCoordinate2D center;
 		center.latitude = [[attributeDict objectForKey:@"lat"] floatValue];
 		center.longitude = [[attributeDict objectForKey:@"lon"] floatValue];
+		
 		
 		[self.delegate pointLoaded:center forLine:self.currentTag withStopId:[attributeDict objectForKey:@"stopId"]];
 	}
@@ -150,17 +153,11 @@
 	}
 }
 
-- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
-{
-	//NSLog(@"end element name %@, namespace %@ qualified %@", elementName, namespaceURI, qName);
-}
-
 - (void)parserDidEndDocument:(NSXMLParser *)parser
 {
 	self.currentTag = nil;
 	[parser release];
 	
-	//NSLog(@"self.routes %@", [self.routes objectForKey:@"1"]);
 }
 -(void)dealloc
 {
