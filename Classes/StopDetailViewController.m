@@ -22,25 +22,26 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	
-	//start the network request
-	NSString *url = [NSString stringWithFormat:@"%@%d", muniStopPredictionUrl, self.stopId];
-	NSURLRequest *theRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:url]
-											  cachePolicy:NSURLRequestUseProtocolCachePolicy
-										  timeoutInterval:60.0];
-	
-	// create the connection with the request
-	// and start loading the data
-	NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
-	if (conn) {
-		// Create the NSMutableData to hold the received data.
-		// receivedData is an instance variable declared elsewhere.
-		self.incomingData = [[NSMutableData alloc] init];
-		[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] setActiveConnections:[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] activeConnections]+1];
-		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-
-	} else
-		NSLog(@"the connection failed");
-	
+	if(!self.incomingData){
+		//start the network request
+		NSString *url = [NSString stringWithFormat:@"%@%d", muniStopPredictionUrl, self.stopId];
+		NSURLRequest *theRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:url]
+												  cachePolicy:NSURLRequestUseProtocolCachePolicy
+											  timeoutInterval:60.0];
+		
+		// create the connection with the request
+		// and start loading the data
+		NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+		if (conn) {
+			// Create the NSMutableData to hold the received data.
+			// receivedData is an instance variable declared elsewhere.
+			self.incomingData = [[NSMutableData alloc] init];
+			[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] setActiveConnections:[(MuniMapAppDelegate *)[[UIApplication sharedApplication] delegate] activeConnections]+1];
+			[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+			
+		} else
+			NSLog(@"the connection failed");
+	}
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
@@ -57,7 +58,7 @@
 
     // release the connection, and the data object
     [connection release];
-	//self.incomingData = nil;
+	self.incomingData = nil;
 
     // receivedData is declared as a method instance elsewhere	
     // inform the user
@@ -74,13 +75,13 @@
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 
 	//load the data into the parser and lets get stuff out.
-	NSXMLParser *parser = [[NSXMLParser alloc] initWithData:self.incomingData];
+	NSXMLParser *parser = [[[NSXMLParser alloc] initWithData:self.incomingData] autorelease];
     [parser setDelegate:self];
     [parser setShouldResolveExternalEntities:YES];
     [parser parse];
 	
     // release the connection, and the data object
-	//self.incomingData = nil;
+	self.incomingData = nil;
     [connection release];
 	
 }
@@ -123,7 +124,6 @@
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser
 {
-	[parser release];
 	//now that we've got all of the data in our internal data structure, let's reload
 	[self.tableView reloadData];
 }
@@ -211,16 +211,17 @@
 
 - (void)dealloc {
     [super dealloc];
+	//NSLog(@"dealloc of StopDetailViewController");
+//	//release all of the NSMutableArray of predictions that I created in the lookup dictionary
+//	for (NSString *k in self.lookup)
+//		[[self.lookup objectForKey:k] release];
+//	NSLog(@"dealloc of StopDetailViewController 2");
 
-	//release all of the NSMutableArray of predictions that I created in the lookup dictionary
-	for (NSString *k in self.lookup)
-		[[self.lookup objectForKey:k] release];
-	
-	self.lookup = nil;
-	self.currentLookup = nil;
+	//self.lookup = nil;
+	//self.currentLookup = nil;
 
 	//Yes this should be relased, just double checking
-	self.incomingData = nil;
+	//self.incomingData = nil;
 }
 
 

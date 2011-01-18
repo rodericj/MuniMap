@@ -9,6 +9,7 @@
 #import "MuniLocationGrabber.h"
 #import <CoreData/CoreData.h>
 #import "MuniMapAppDelegate.h"
+#import "MuniMapViewController.h"
 
 #define muniRoutlistUrl @"http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=sf-muni"
 #define routeDetailURL @"http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni&r="
@@ -82,7 +83,7 @@
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 
 	//load the data into the parser and lets get stuff out.
-	NSXMLParser *parser = [[NSXMLParser alloc] initWithData:[self.rawDataDictionary objectForKey:[connection description]]];
+	NSXMLParser *parser = [[[NSXMLParser alloc] initWithData:[self.rawDataDictionary objectForKey:[connection description]]] autorelease];
     [parser setDelegate:self];
     [parser setShouldResolveExternalEntities:YES];
     [parser parse];
@@ -143,8 +144,9 @@
 		center.latitude = [[attributeDict objectForKey:@"lat"] floatValue];
 		center.longitude = [[attributeDict objectForKey:@"lon"] floatValue];
 		
-		
-		[self.delegate pointLoaded:center forLine:self.currentTag withStopId:[attributeDict objectForKey:@"stopId"]];
+		//gdirect.com
+		//if([(MuniMapViewController *)self.delegate respondsToSelector:@selector(pointLoaded)])
+			[(MuniMapViewController *)self.delegate pointLoaded:center forLine:self.currentTag withStopId:[attributeDict objectForKey:@"stopId"]];
 	}
 	else {
 		//NSLog(@"and we found a %@", elementName);
@@ -155,9 +157,7 @@
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser
 {
-	self.currentTag = nil;
-	[parser release];
-	
+	self.currentTag = nil;	
 }
 -(void)dealloc
 {

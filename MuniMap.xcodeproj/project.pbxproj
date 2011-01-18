@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		170400C512E3A55D00531C9D /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 170400C412E3A55D00531C9D /* iAd.framework */; };
+		1704028012E40F7100531C9D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1704027F12E40F7100531C9D /* QuartzCore.framework */; };
 		174D703012DD80DD00EEF211 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 174D702F12DD80DD00EEF211 /* MapKit.framework */; };
 		174D709912DD82FE00EEF211 /* MyCLController.m in Sources */ = {isa = PBXBuildFile; fileRef = 174D709812DD82FE00EEF211 /* MyCLController.m */; };
 		174D70A112DD83AA00EEF211 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 174D70A012DD83AA00EEF211 /* CoreLocation.framework */; };
@@ -31,6 +32,7 @@
 
 /* Begin PBXFileReference section */
 		170400C412E3A55D00531C9D /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
+		1704027F12E40F7100531C9D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		174D702F12DD80DD00EEF211 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		174D709712DD82FE00EEF211 /* MyCLController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCLController.h; sourceTree = "<group>"; };
 		174D709812DD82FE00EEF211 /* MyCLController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCLController.m; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				174D70A112DD83AA00EEF211 /* CoreLocation.framework in Frameworks */,
 				174D72A012DEE45700EEF211 /* CoreData.framework in Frameworks */,
 				170400C512E3A55D00531C9D /* iAd.framework in Frameworks */,
+				1704028012E40F7100531C9D /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,6 +166,7 @@
 				174D70A012DD83AA00EEF211 /* CoreLocation.framework */,
 				174D729F12DEE45700EEF211 /* CoreData.framework */,
 				170400C412E3A55D00531C9D /* iAd.framework */,
+				1704027F12E40F7100531C9D /* QuartzCore.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

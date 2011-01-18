@@ -7,18 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MuniMapViewController.h"
+//#import "MuniMapViewController.h"
 @interface MuniLocationGrabber : NSObject <NSXMLParserDelegate>{
 	NSMutableDictionary *mRoutes;
 	NSMutableDictionary *mRawDataDictionary;
 	NSString *mCurrentTag;
-	MuniMapViewController *mDelegate;
+	id mDelegate;
 }
 
 @property (nonatomic, retain) NSMutableDictionary *routes;
 @property (nonatomic, retain) NSMutableDictionary *rawDataDictionary;
 @property (nonatomic, retain) NSString	*currentTag;
-@property (nonatomic, retain) MuniMapViewController *delegate;
--(void)beginLoadingMuniDataWithDelegate:(MuniMapViewController *)delegate;
+@property (nonatomic, retain) id delegate;
+
+-(void)beginLoadingMuniDataWithDelegate:(id)delegate;
 
 @end
