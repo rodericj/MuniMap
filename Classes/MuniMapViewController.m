@@ -195,7 +195,7 @@
 		pinView = [[[MKPinAnnotationView alloc]
 											   initWithAnnotation:annotation reuseIdentifier:stopannotationidentifier] autorelease];
 		pinView.pinColor = MKPinAnnotationColorGreen;
-		pinView.animatesDrop = YES;
+		pinView.animatesDrop = NO;
 		pinView.canShowCallout = YES;
 	}
 	
