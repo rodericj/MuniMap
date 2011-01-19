@@ -88,7 +88,7 @@
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName attributes:(NSDictionary *)attributeDict
 {
-
+	NSLog(@"the stop info %@, %@", elementName, attributeDict);
 	//predictions (with an 's') come first in the XML, use the prediction element to describe the route title
 	//  ex: 1-california. 
 	//Use this as the beginning of our dictionary key
@@ -96,14 +96,17 @@
 		if (!self.lookup)
 			self.lookup = [[NSMutableDictionary alloc] init];	
 		if ([attributeDict objectForKey:@"dirTitleBecauseNoPredictions"]) {
-			NSString *routeName = [NSString stringWithFormat:@"%@ %@", 
+			NSString *routeName = [NSString stringWithFormat:@"%@\n%@\n%@", 
 								   [attributeDict objectForKey:@"routeTitle"],
-								   [attributeDict objectForKey:@"dirTitleBecauseNoPredictions"]];
+								   [attributeDict objectForKey:@"dirTitleBecauseNoPredictions"],
+								   [attributeDict objectForKey:@"stopTitle"]];
 			self.currentLookup = routeName;
 			[self.lookup setObject:[[NSMutableArray alloc] init] forKey:self.currentLookup];
 		}
 		else 
-			self.currentLookup = [attributeDict objectForKey:@"routeTitle"];
+			self.currentLookup = [NSString stringWithFormat:@"%@ \n%@",
+								  [attributeDict objectForKey:@"routeTitle"],
+								  [attributeDict objectForKey:@"stopTitle"]];
 	}
 	
 	//direction comes next. This, obviously, describes the direction of the route.
